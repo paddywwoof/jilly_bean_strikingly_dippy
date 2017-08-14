@@ -1,4 +1,3 @@
-//<script type="javascript">
 var ctx = document.getElementById("myCanvas").getContext("2d");
 var W = 0.98 * Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 var H = 0.6 * Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -205,4 +204,4 @@ function onDeviceReady() {
 
 window.addEventListener('deviceorientation', handleOrientation);
 document.addEventListener('deviceready', onDeviceReady, false);
-//</script>
+
