@@ -143,9 +143,12 @@
         var z = Math.atan2(medianMean(zsrs, Math.sin(a)), medianMean(zcrs, Math.cos(a))) - zadj;
         z = (630.0 - z * 180.0 / Math.PI) % 360.0;
         m = taitBryan([0, -1, 0], x, y, z);
-        if (h.constructor === Array && g.constructor === Array) { // check if these have been calculated
-          stk = (450.0 - Math.atan2(dot(m, h), dot(m, cross(g, h))) * 180.0 / Math.PI) % 360.0;
-        }
+        g = taitBryan([0, 0, 1], x, y, z);
+        h = norm([-g[1], g[0], 0]);
+        dip = Math.sqrt((Math.pow(g[0], 2) + Math.pow(g[1], 2)) /
+                     (Math.pow(g[0], 2) + Math.pow(g[1], 2) + Math.pow(g[2], 2)));
+        dip = 90.0 - Math.acos(dip) * 180.0 / Math.PI;
+        stk = (450.0 - Math.atan2(dot(m, h), dot(m, cross(g, h))) * 180.0 / Math.PI) % 360.0;
         stk180 = " (" + (stk > 180.0 ? stk - 180.0 : stk).toFixed(1) + 
                      " " + cpoints[Math.floor((stk + 112.5) / 45.0) % 8] + ")";
         diptxt.innerHTML = "- strike: " + stk.toFixed(1) + stk180 +
@@ -192,20 +195,6 @@
         ctx.fill();
         ctx.stroke();
       }
-      
-      function handleMotion(event) {
-        // linear accelerometer (inc gravity) changes //////////////////
-        ////////////////////////////////////////////////////////////////
-        var x = medianMean(xs, event.accelerationIncludingGravity.x) - gxadj;
-        var y = medianMean(ys, event.accelerationIncludingGravity.y) - gyadj;
-        var z = medianMean(zs, event.accelerationIncludingGravity.z);
-
-        g = norm([x, y, z]);
-        h = norm([-g[1], g[0], 0]);
-        dip = Math.sqrt((Math.pow(g[0], 2) + Math.pow(g[1], 2)) /
-                     (Math.pow(g[0], 2) + Math.pow(g[1], 2) + Math.pow(g[2], 2)));
-        dip = 90.0 - Math.acos(dip) * 180.0 / Math.PI;
-      }
 
       var onSuccess = function(position) {
         ////////////////////////////////////////////////////////////////
@@ -239,7 +228,6 @@
       }
 
       window.addEventListener('deviceorientation', handleOrientation);
-      window.addEventListener('devicemotion', handleMotion);
       document.addEventListener('deviceready', onDeviceReady, false);
     </script>
   </body>
